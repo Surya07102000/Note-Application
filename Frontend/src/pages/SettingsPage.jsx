@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Shield, Bell, Palette, Save, Eye, EyeOff, CheckCircle, XCircle, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { User, Shield, Palette, Save, Eye, EyeOff, CheckCircle, XCircle, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
 import { useTheme } from "../context/ThemeContext";
@@ -282,62 +282,6 @@ function SecuritySection() {
     );
 }
 
-// ─── Notifications Section ─────────────────────────────────────────
-function NotificationsSection() {
-    const [prefs, setPrefs] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('notif_prefs')) || {}; } catch { return {}; }
-    });
-    const [saved, setSaved] = useState(false);
-
-    const options = [
-        { key: 'noteShared', label: 'Note Shared With Me', desc: 'When someone shares a note with you' },
-        { key: 'shareRevoked', label: 'Share Access Revoked', desc: 'When your access to a note is removed' },
-        { key: 'noteUpdated', label: 'Shared Note Updated', desc: 'When a shared note is edited by its owner' },
-    ];
-
-    const toggle = (key) => setPrefs(p => ({ ...p, [key]: !p[key] }));
-
-    const save = () => {
-        localStorage.setItem('notif_prefs', JSON.stringify(prefs));
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2500);
-    };
-
-    return (
-        <div className="space-y-4">
-            <AnimatePresence>
-                {saved && <StatusBanner status={{ type: 'success', message: 'Notification preferences saved!' }} />}
-            </AnimatePresence>
-            <div className="space-y-3">
-                {options.map(({ key, label, desc }) => (
-                    <div
-                        key={key}
-                        className="flex items-center justify-between p-4 rounded-xl"
-                        style={{ background: 'var(--secondary)', border: '1px solid var(--border)' }}
-                    >
-                        <div>
-                            <p className="text-sm font-bold" style={{ color: 'var(--foreground)' }}>{label}</p>
-                            <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{desc}</p>
-                        </div>
-                        <button
-                            onClick={() => toggle(key)}
-                            className={`relative w-11 h-6 rounded-full transition-colors shrink-0`}
-                            style={{ background: prefs[key] ? 'var(--primary)' : 'var(--muted)' }}
-                        >
-                            <span
-                                className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${prefs[key] ? 'left-6' : 'left-1'}`}
-                            />
-                        </button>
-                    </div>
-                ))}
-            </div>
-            <Button onClick={save} className="gap-2 rounded-xl px-6 py-3 text-sm font-bold">
-                <Save className="w-4 h-4" />
-                Save Preferences
-            </Button>
-        </div>
-    );
-}
 
 // ─── Appearance Section ────────────────────────────────────────────
 function AppearanceSection() {
@@ -436,16 +380,6 @@ export function SettingsPage() {
                     iconColor="#f59e0b"
                 >
                     <SecuritySection />
-                </SettingSection>
-
-                <SettingSection
-                    icon={Bell}
-                    title="Notifications"
-                    description="Configure how you want to be alerted"
-                    iconBg="rgba(16,185,129,0.15)"
-                    iconColor="#10b981"
-                >
-                    <NotificationsSection />
                 </SettingSection>
 
                 <SettingSection
