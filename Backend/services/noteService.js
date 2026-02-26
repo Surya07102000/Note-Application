@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const { Note, User, SharedNote } = require('../models');
 
-exports.getNotes = async (userId, isArchived = false, limit = 5, offset = 0) => {
+exports.getNotes = async (userId, isArchived = false, limit = 20, offset = 0) => {
     // Find notes owned by user OR shared with user
     const { count, rows: notes } = await Note.findAndCountAll({
         where: {

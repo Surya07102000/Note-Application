@@ -138,7 +138,7 @@ export function DashboardPage() {
 
             {/* Content Area */}
             {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                     {[1, 2, 3, 4, 5, 6].map(i => (
                         <div key={i} className="h-72 rounded-[2rem] animate-pulse border" style={{ background: 'var(--card)', borderColor: 'var(--border)' }} />
                     ))}
@@ -148,7 +148,7 @@ export function DashboardPage() {
                     {notes.length > 0 ? (
                         <motion.div
                             layout
-                            className="columns-1 md:columns-2 lg:columns-3 gap-8"
+                            className="columns-1 sm:columns-2 lg:columns-2 xl:columns-3 gap-8"
                         >
                             {notes.map((note) => (
                                 <motion.div

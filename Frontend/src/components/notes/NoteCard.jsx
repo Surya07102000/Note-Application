@@ -20,7 +20,7 @@ export function NoteCard({ note, onEdit, onDelete, onShare, onArchive, onUnarchi
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity" />
 
             <div className="flex justify-between items-start relative z-10">
-                <div className="space-y-1 max-w-[70%]">
+                <div className="space-y-1 flex-1 min-w-0">
                     <h3
                         className="text-xl font-black font-outfit uppercase tracking-wider group-hover:text-primary transition-colors truncate"
                         style={{ color: 'var(--foreground)' }}
@@ -48,7 +48,7 @@ export function NoteCard({ note, onEdit, onDelete, onShare, onArchive, onUnarchi
                 </div>
 
                 {/* Hover Action Buttons */}
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
                     <button
                         onClick={(e) => { e.stopPropagation(); onShare(note); }}
                         className="p-2.5 hover:bg-primary/10 rounded-xl transition-colors border hover:text-primary"
