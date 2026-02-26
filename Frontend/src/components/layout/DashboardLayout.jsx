@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
     LogOut,
     LayoutDashboard,
@@ -10,16 +10,40 @@ import {
     Search,
     StickyNote,
     Sparkles,
-    Archive
+    Archive,
+    Menu,
+    X
 } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { cn } from "../../utils/cn";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function DashboardLayout({ children }) {
     const { user, logout } = useAuthStore();
     const navigate = useNavigate();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const location = useLocation();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Initial state based on screen size
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsSidebarOpen(true);
+            } else {
+                setIsSidebarOpen(false);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Close sidebar on navigation (mobile only)
+    useEffect(() => {
+        if (window.innerWidth < 1024) {
+            setIsSidebarOpen(false);
+        }
+    }, [location.pathname]);
 
     const navItems = [
         { label: "Overview", icon: LayoutDashboard, path: "/dashboard" },
@@ -36,10 +60,26 @@ export function DashboardLayout({ children }) {
 
     return (
         <div className="flex h-screen overflow-hidden font-inter" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+
+
+            {/* Sidebar Overlay for Mobile */}
+            <AnimatePresence>
+                {isSidebarOpen && window.innerWidth < 1024 && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Sidebar */}
             <aside className={cn(
-                "w-72 border-r transition-all duration-300 flex flex-col z-20",
-                !isSidebarOpen && "-ml-72"
+                "fixed lg:relative top-0 left-0 h-full w-72 border-r transition-all duration-300 flex flex-col z-40 lg:z-20",
+                !isSidebarOpen && "-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0 lg:p-0 overflow-hidden",
+                isSidebarOpen && "translate-x-0"
             )} style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
                 {/* Logo Section - MATCHING LOGIN PAGE */}
                 <div className="p-8 flex items-center gap-4">
@@ -59,7 +99,7 @@ export function DashboardLayout({ children }) {
                     </div>
                 </div>
 
-                <nav className="flex-1 px-4 py-4 space-y-1">
+                <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
                     {navItems.map((item) => {
                         if (item.adminOnly && user?.role !== 'admin') return null;
 
@@ -122,6 +162,19 @@ export function DashboardLayout({ children }) {
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto relative" style={{ background: 'var(--background)' }}>
+                {/* Mobile Header Toggle - Moved inside main to scroll away */}
+                <div className={cn(
+                    "lg:hidden absolute top-6 z-50 transition-all duration-300",
+                    isSidebarOpen ? "left-64" : "left-6"
+                )}>
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="p-3 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center"
+                    >
+                        {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+                </div>
+
                 {/* Global Ambient Glow */}
                 <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
@@ -130,6 +183,6 @@ export function DashboardLayout({ children }) {
                     {children}
                 </div>
             </main>
-        </div >
+        </div>
     );
 }

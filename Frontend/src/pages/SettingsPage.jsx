@@ -29,8 +29,8 @@ function StatusBanner({ status }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold mb-4 ${status.type === 'success'
-                    ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
-                    : 'bg-red-500/15 text-red-500 border border-red-500/30'
+                ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                : 'bg-red-500/15 text-red-500 border border-red-500/30'
                 }`}
         >
             {status.type === 'success' ? <CheckCircle className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
@@ -407,12 +407,12 @@ export function SettingsPage() {
 
     return (
         <div
-            className="p-8 max-w-3xl mx-auto space-y-6 animate-fade-in font-inter"
+            className="p-4 sm:p-8 max-w-3xl mx-auto space-y-6 animate-fade-in font-inter"
             style={{ color: 'var(--foreground)' }}
         >
-            <header>
-                <h1 className="text-5xl font-black font-outfit tracking-tight">Settings</h1>
-                <p className="mt-2 text-base font-medium" style={{ color: 'var(--muted-foreground)' }}>
+            <header className="pt-16 lg:pt-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-outfit tracking-tight">Settings</h1>
+                <p className="mt-2 text-sm sm:text-base font-medium" style={{ color: 'var(--muted-foreground)' }}>
                     Configure your workspace preferences.
                 </p>
             </header>
