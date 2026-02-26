@@ -8,7 +8,7 @@ export function NoteCard({ note, onEdit, onDelete, onShare, onArchive, onUnarchi
             layout
             whileHover={{ y: -8, scale: 1.02 }}
             onClick={() => onEdit(note)}
-            className="group relative p-6 rounded-[2rem] flex flex-col gap-6 cursor-pointer border hover:border-primary/30 transition-all duration-300"
+            className="group relative p-6 rounded-[2rem] flex flex-col gap-6 cursor-pointer border hover:border-primary/30 transition-all duration-300 min-h-[210px]"
             style={{
                 background: 'var(--card)',
                 borderColor: 'var(--border)',

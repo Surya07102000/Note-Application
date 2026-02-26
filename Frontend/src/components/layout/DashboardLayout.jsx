@@ -60,18 +60,7 @@ export function DashboardLayout({ children }) {
 
     return (
         <div className="flex h-screen overflow-hidden font-inter" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
-            {/* Mobile Header Toggle */}
-            <div className={cn(
-                "lg:hidden fixed top-6 z-50 transition-all duration-300",
-                isSidebarOpen ? "left-64" : "left-6"
-            )}>
-                <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-3 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center"
-                >
-                    {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-                </button>
-            </div>
+
 
             {/* Sidebar Overlay for Mobile */}
             <AnimatePresence>
@@ -173,6 +162,19 @@ export function DashboardLayout({ children }) {
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto relative" style={{ background: 'var(--background)' }}>
+                {/* Mobile Header Toggle - Moved inside main to scroll away */}
+                <div className={cn(
+                    "lg:hidden absolute top-6 z-50 transition-all duration-300",
+                    isSidebarOpen ? "left-64" : "left-6"
+                )}>
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="p-3 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center"
+                    >
+                        {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+                </div>
+
                 {/* Global Ambient Glow */}
                 <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-accent/5 blur-[100px] rounded-full pointer-events-none" />

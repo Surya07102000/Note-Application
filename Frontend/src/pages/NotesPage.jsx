@@ -81,17 +81,18 @@ export function NotesPage({ defaultShowArchived = false }) {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="columns-1 md:columns-2 lg:columns-3 gap-8">
                     {notes.map((note) => (
-                        <NoteCard
-                            key={note.id}
-                            note={note}
-                            onEdit={() => openEditModal(note)}
-                            onDelete={() => deleteNote(note.id)}
-                            onShare={() => openShareModal(note)}
-                            onArchive={archiveNote}
-                            onUnarchive={unarchiveNote}
-                        />
+                        <div key={note.id} className="break-inside-avoid mb-8">
+                            <NoteCard
+                                note={note}
+                                onEdit={() => openEditModal(note)}
+                                onDelete={() => deleteNote(note.id)}
+                                onShare={() => openShareModal(note)}
+                                onArchive={archiveNote}
+                                onUnarchive={unarchiveNote}
+                            />
+                        </div>
                     ))}
                 </div>
             )}

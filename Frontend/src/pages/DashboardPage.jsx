@@ -6,6 +6,8 @@ import { NoteModal } from "../components/notes/NoteModal";
 import { Button } from "../components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShareModal } from "../components/notes/ShareModal";
+import { WorkspaceBriefingModal } from "../components/dashboard/WorkspaceBriefingModal";
+import api from "../api/axiosConfig";
 
 export function DashboardPage() {
     const {
@@ -18,9 +20,31 @@ export function DashboardPage() {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
 
+    // Briefing state
+    const [isBriefingOpen, setIsBriefingOpen] = useState(false);
+    const [briefingData, setBriefingData] = useState(null);
+    const [isBriefingLoading, setIsBriefingLoading] = useState(false);
+
     useEffect(() => {
         fetchNotes(1, false); // Always show only active (non-archived) notes
     }, [fetchNotes]);
+
+    const handleBriefing = async () => {
+        setIsBriefingOpen(true);
+        if (briefingData && notes.length > 0) return; // Keep current data unless refreshed
+
+        setIsBriefingLoading(true);
+        try {
+            const response = await api.post('/ai/briefing', { notes });
+            if (response.data.success) {
+                setBriefingData(response.data);
+            }
+        } catch (error) {
+            console.error("Briefing failed:", error);
+        } finally {
+            setIsBriefingLoading(false);
+        }
+    };
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -73,7 +97,7 @@ export function DashboardPage() {
                     </Button>
                     <Button
                         variant="secondary"
-                        onClick={() => alert("AI Assistant is analyzing your workspace...")}
+                        onClick={handleBriefing}
                         className="flex-1 md:flex-none py-6 px-8 rounded-2xl text-lg font-bold gap-3 bg-gradient-to-r from-indigo-500 to-primary border-none shadow-2xl shadow-indigo-500/20"
                     >
                         <Sparkles className="w-6 h-6" />
@@ -81,6 +105,18 @@ export function DashboardPage() {
                     </Button>
                 </div>
             </header>
+
+            {/* Briefing Modal */}
+            <WorkspaceBriefingModal
+                isOpen={isBriefingOpen}
+                onClose={() => setIsBriefingOpen(false)}
+                briefing={briefingData}
+                isLoading={isBriefingLoading}
+                onRefresh={() => {
+                    setBriefingData(null);
+                    handleBriefing();
+                }}
+            />
 
             {/* Search Section */}
             <div className="relative group">
@@ -112,7 +148,7 @@ export function DashboardPage() {
                     {notes.length > 0 ? (
                         <motion.div
                             layout
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                            className="columns-1 md:columns-2 lg:columns-3 gap-8"
                         >
                             {notes.map((note) => (
                                 <motion.div
@@ -121,6 +157,7 @@ export function DashboardPage() {
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.8 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    className="break-inside-avoid mb-8"
                                 >
                                     <NoteCard
                                         note={note}
