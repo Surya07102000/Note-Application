@@ -319,6 +319,82 @@ Writing Suggestions:`;
     }
   }
 
+  /**
+   * Generate a comprehensive briefing of the user's recent notes
+   */
+  async generateWorkspaceBriefing(notes) {
+    if (!this.isAvailable()) {
+      throw new Error('Gemini AI service is not available. Please configure GEMINI_API_KEY.');
+    }
+
+    if (!notes || notes.length === 0) {
+      return {
+        success: true,
+        summary: "I've scanned your workspace, but it looks like you haven't started your thought repository yet. Create your first note to unlock deep workspace insights!",
+        actionItems: ["Create your first note", "Capture a quick thought", "Define a task or goal"],
+        themes: ["Getting Started"],
+        generatedAt: new Date().toISOString()
+      };
+    }
+
+    const notesSummary = notes.slice(0, 10).map((n, i) =>
+      `Note ${i + 1}: [Title: ${n.title}] - [Content: ${n.content.substring(0, 300)}...]`
+    ).join('\n\n');
+
+    const systemPrompt = `You are an elite personal executive assistant and knowledge analyst. Your goal is to provide a high-level, sophisticated BRIEFING for the user based on their recent notes.
+
+INSTRUCTIONS:
+1. SUMMARY: Provide a concise, professional 3-4 sentence overview of what the user has been focusing on recently.
+2. ACTION ITEMS: Identify 3-5 specific, actionable tasks, deadlines, or follow-ups mentioned or implied in the notes.
+3. THEMES & INSIGHTS: Identify the top 2-3 primary themes across all notes and provide a brief insight for each.
+
+RESPONSE FORMAT:
+Always respond in exactly this JSON-friendly structured format (NOT JSON, but labeled sections):
+OVERVIEW: [Your overview here]
+TASKS:
+- [Action 1]
+- [Action 2]
+- [Action 3]
+THEMES:
+- [Theme 1]: [Insight 1]
+- [Theme 2]: [Insight 2]`;
+
+    const fullPrompt = `${systemPrompt}\n\nUSER'S RECENT NOTES:\n${notesSummary}`;
+
+    try {
+      const model = this.genAI.getGenerativeModel({
+        model: this.modelName,
+        generationConfig: {
+          ...this.modelConfig,
+          temperature: 0.6,
+          maxOutputTokens: 1500
+        }
+      });
+
+      const result = await model.generateContent(fullPrompt);
+      const response = await result.response;
+      const briefingContent = response.text().trim();
+
+      // Simple parsing
+      const overviewMatch = briefingContent.match(/OVERVIEW:\s*([\s\S]*?)(?=TASKS:)/i);
+      const tasksMatch = briefingContent.match(/TASKS:\s*([\s\S]*?)(?=THEMES:)/i);
+      const themesMatch = briefingContent.match(/THEMES:\s*([\s\S]*)/i);
+
+      return {
+        success: true,
+        summary: overviewMatch ? overviewMatch[1].trim() : "Unable to generate summary.",
+        actionItems: tasksMatch ? tasksMatch[1].trim().split('\n').map(l => l.replace(/^[-*]\s*/, '').trim()).filter(l => l) : [],
+        themes: themesMatch ? themesMatch[1].trim().split('\n').map(l => l.replace(/^[-*]\s*/, '').trim()).filter(l => l) : [],
+        generatedAt: new Date().toISOString(),
+        model: this.modelName,
+        tokensUsed: response.usageMetadata?.totalTokenCount || 0
+      };
+    } catch (error) {
+      console.error('Gemini Briefing Error:', error);
+      throw new Error(this.getErrorMessage(error));
+    }
+  }
+
   // Helper methods
   buildSystemPrompt(tone, length, format, includeExamples) {
     let prompt = `You are an expert content creator and writing assistant. Create high-quality, well-structured notes based on user requests.
