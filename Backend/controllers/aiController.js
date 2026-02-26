@@ -157,6 +157,24 @@ exports.getWritingSuggestions = async (req, res) => {
     }
 };
 
+exports.getWorkspaceBriefing = async (req, res) => {
+    try {
+        const { notes } = req.body;
+
+        console.log(`📊 Generating workspace briefing with Gemini for user: ${req.user.email}`);
+        const result = await geminiService.generateWorkspaceBriefing(notes);
+
+        console.log(`✅ Workspace briefing generated successfully`);
+        res.json(result);
+    } catch (error) {
+        console.error('Workspace briefing error:', error.message);
+        res.status(500).json({
+            message: error.message,
+            success: false
+        });
+    }
+};
+
 exports.getAiStatus = (req, res) => {
     try {
         const serviceInfo = geminiService.getServiceInfo();

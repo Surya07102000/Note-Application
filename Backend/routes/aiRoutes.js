@@ -42,6 +42,12 @@ router.get(
   AiController.getAiStatus
 );
 
+// Get workspace briefing
+router.post(
+  '/briefing',
+  AiController.getWorkspaceBriefing
+);
+
 // Get AI usage stats (Admin handled inside controller logic)
 router.get(
   '/stats',
