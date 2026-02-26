@@ -49,26 +49,26 @@ export function NotesPage({ defaultShowArchived = false }) {
     };
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in font-inter" style={{ color: 'var(--foreground)' }}>
-            <header className="flex justify-between items-center pt-4">
-                <div>
-                    <h1 className="text-5xl font-black font-outfit tracking-tight">{showArchived ? "Archived Notes" : "My Notes"}</h1>
-                    <p className="text-muted-foreground mt-2 text-lg font-medium">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-8 animate-fade-in font-inter" style={{ color: 'var(--foreground)' }}>
+            <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 pt-20 lg:pt-4">
+                <div className="space-y-1">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-outfit tracking-tight">{showArchived ? "Archived Notes" : "My Notes"}</h1>
+                    <p className="text-muted-foreground text-base sm:text-lg font-medium max-w-lg leading-relaxed">
                         {showArchived ? "View and restore your archived thoughts." : "Manage and organize your personal thought repository."}
                     </p>
                 </div>
                 {!defaultShowArchived && (
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4 w-full lg:w-auto">
                         <Button
                             onClick={toggleArchiveView}
                             variant="secondary"
-                            className="gap-3 py-6 px-8 rounded-2xl font-bold text-lg"
+                            className="flex-1 sm:flex-none gap-3 py-6 px-8 rounded-2xl font-bold text-lg"
                         >
-                            {showArchived ? "Active Notes" : "Archive"}
+                            {showArchived ? "Active" : "Archive"}
                         </Button>
-                        <Button onClick={openCreateModal} className="gap-3 py-6 px-8 rounded-2xl font-bold text-lg shadow-2xl shadow-primary/20">
+                        <Button onClick={openCreateModal} className="flex-1 sm:flex-none gap-3 py-6 px-8 rounded-2xl font-bold text-lg shadow-2xl shadow-primary/20">
                             <Plus className="w-6 h-6" />
-                            New Note
+                            New
                         </Button>
                     </div>
                 )}

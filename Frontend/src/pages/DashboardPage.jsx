@@ -55,15 +55,15 @@ export function DashboardPage() {
     };
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-12 animate-fade-in font-inter" style={{ color: 'var(--foreground)' }}>
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pt-4">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-10 md:space-y-12 animate-fade-in font-inter" style={{ color: 'var(--foreground)' }}>
+            <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 md:gap-8 pt-20 lg:pt-4">
                 <div className="space-y-1">
-                    <h1 className="text-5xl font-black font-outfit tracking-tight">Welcome back!</h1>
-                    <p className="text-muted-foreground text-xl font-medium max-w-xl">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-outfit tracking-tight leading-tight">Welcome back!</h1>
+                    <p className="text-muted-foreground text-base sm:text-lg md:text-xl font-medium max-w-xl">
                         Your intelligent workspace is ready. What will you create today?
                     </p>
                 </div>
-                <div className="flex gap-4 w-full md:w-auto">
+                <div className="flex flex-wrap gap-4 w-full lg:w-auto">
                     <Button
                         onClick={openCreateModal}
                         className="flex-1 md:flex-none py-6 px-8 rounded-2xl text-lg font-bold gap-3 shadow-2xl shadow-primary/30"

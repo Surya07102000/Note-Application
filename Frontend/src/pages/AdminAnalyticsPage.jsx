@@ -97,10 +97,10 @@ export function AdminAnalyticsPage() {
     };
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
-            <header>
-                <h1 className="text-4xl">System Analytics</h1>
-                <p className="text-muted-foreground mt-1">Real-time usage metrics and system performance.</p>
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+            <header className="pt-16 lg:pt-4">
+                <h1 className="text-3xl sm:text-4xl font-black font-outfit tracking-tight">System Analytics</h1>
+                <p className="text-muted-foreground mt-1 text-sm sm:text-base font-medium">Real-time usage metrics and system performance.</p>
             </header>
 
             {/* Stats Summary */}
